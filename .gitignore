@@ -1,0 +1,3 @@
+dist/
+flask_jwt_consumer.egg-info/
+build/
