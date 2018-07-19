@@ -17,3 +17,9 @@ jobs:
           command: |
             pipenv shell
             pytest tests --verbose
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - test
