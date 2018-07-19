@@ -10,7 +10,7 @@ jobs:
           key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
       - run:
           name: 'Install test dependencies'
-          command: pipenv install
+          command: pipenv install --dev
       - save_cache:
           paths:
             - ./venv
