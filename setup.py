@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="flask_jwt_consumer",
-    version="0.0.1",
+    version="0.0.2",
     author="Dmitrii Lapshukov",
     author_email="lapshukov@gmail.com",
     description="JWT consumer with multi public key support",
