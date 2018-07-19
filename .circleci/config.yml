@@ -3,6 +3,7 @@ jobs:
   test:
     docker:
       - image: circleci/python:3.6.4
+    working_directory: ~/flask-jwt-consumer
     steps:
       - checkout
       - restore_cache:
