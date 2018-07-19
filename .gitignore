@@ -1,3 +1,5 @@
 dist/
 flask_jwt_consumer.egg-info/
 build/
+__pycache__
+.pytest_cache/

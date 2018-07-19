@@ -1,0 +1,18 @@
+version: 2
+
+jobs:
+  test:
+  docker:
+    - image: circleci/python:3.6.1
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
+      - run:
+          command: pipenv install
+      - save_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
+      - run:
+          command: |
+            pipenv shell
+            pytest tests --verbose

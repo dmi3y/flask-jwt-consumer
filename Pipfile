@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "flask-jwt-consumer"
+
+[dev-packages]
+WebTest = "*"
+flake8 = "*"
+flake8-blind-except = "*"
+flake8-debugger = "*"
+flake8-docstrings = "*"
+flake8-isort = "*"
+flake8-quotes = "*"
+isort = "*"
+pep8-naming = "*"
+pytest = "*"
+flask = "*"
+pyjwt = "*"
+pylint = "*"
+cryptography = "*"
+
+[requires]
+python_version = "3.6"
