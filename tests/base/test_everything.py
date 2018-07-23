@@ -6,9 +6,9 @@ from unittest.mock import PropertyMock
 import jwt
 import pytest
 
-from flask_jwt_consumer import (AuthError, JWTManager, get_jwt_payload,
+from flask_jwt_consumer import (AuthError, JWTConsumer, get_jwt_payload,
                                 get_jwt_raw, requires_jwt)
-from flask_jwt_consumer.flask_jwt_consumer import _brute_force_key
+from flask_jwt_consumer.helpers import _brute_force_key
 
 JWT_PRIVATE_KEY = """-----BEGIN RSA PRIVATE KEY-----
 MIIJKQIBAAKCAgEAwuN+aHSCA+WElMpVwWvak/WJWxp7IFnQBbihzH1Of/vYcIuw
@@ -126,12 +126,12 @@ no_aud_token = jwt.encode({
     algorithm=JWT_ALGORITHM)
 
 
-class TestExtensionJWTManager:
-    """Test JWTManager."""
+class TestExtensionJWTConsumer:
+    """Test JWTConsumer."""
 
     def test_jwt_manager_should_set_defaults(self, dummy_app):
-        """Test JWTManager defaults."""
-        JWTManager(dummy_app)
+        """Test JWTConsumer defaults."""
+        JWTConsumer(dummy_app)
         assert dummy_app.config['JWT_HEADER_NAME'] == 'Authorization'
         assert dummy_app.config['JWT_HEADER_TYPE'] == 'Bearer'
         assert dummy_app.config['JWT_ALGORITHM'] == 'RS256'
@@ -195,18 +195,18 @@ class TestExtensionJWTManager:
 
     def test_jwt_requies_jwt_success(self, live_testapp):
         """Should run through."""
-        with mock.patch('flask_jwt_consumer.flask_jwt_consumer.get_jwt_raw',
+        with mock.patch('flask_jwt_consumer.decorators.get_jwt_raw',
                         return_value=good_token):
-            with mock.patch('flask_jwt_consumer.flask_jwt_consumer._brute_force_key',
+            with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
                             return_value=JWT_PUBLIC_KEY):
                 protected = requires_jwt(identity)
                 assert protected('Yolo') == 'Yolo'
 
     def test_jwt_requies_jwt_bad_pub_key(self, live_testapp):
         """Should fail."""
-        with mock.patch('flask_jwt_consumer.flask_jwt_consumer.get_jwt_raw',
+        with mock.patch('flask_jwt_consumer.decorators.get_jwt_raw',
                         return_value=good_token):
-            with mock.patch('flask_jwt_consumer.flask_jwt_consumer._brute_force_key',
+            with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
                             return_value=RANDOM_PUBLIC_KEY):
 
                 try:
@@ -219,9 +219,9 @@ class TestExtensionJWTManager:
 
     def test_jwt_requies_jwt_expired_token(self, live_testapp):
         """Should fail."""
-        with mock.patch('flask_jwt_consumer.flask_jwt_consumer.get_jwt_raw',
+        with mock.patch('flask_jwt_consumer.decorators.get_jwt_raw',
                         return_value=expired_token):
-            with mock.patch('flask_jwt_consumer.flask_jwt_consumer._brute_force_key',
+            with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
                             return_value=JWT_PUBLIC_KEY):
 
                 try:
@@ -234,9 +234,9 @@ class TestExtensionJWTManager:
 
     def test_jwt_requies_jwt_no_aud_token(self, live_testapp):
         """Should fail."""
-        with mock.patch('flask_jwt_consumer.flask_jwt_consumer.get_jwt_raw',
+        with mock.patch('flask_jwt_consumer.decorators.get_jwt_raw',
                         return_value=no_aud_token):
-            with mock.patch('flask_jwt_consumer.flask_jwt_consumer._brute_force_key',
+            with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
                             return_value=JWT_PUBLIC_KEY):
 
                 try:
@@ -249,9 +249,9 @@ class TestExtensionJWTManager:
 
     def test_jwt_get_jwt_payload(self, live_testapp):
         """Should run through."""
-        with mock.patch('flask_jwt_consumer.flask_jwt_consumer.get_jwt_raw',
+        with mock.patch('flask_jwt_consumer.decorators.get_jwt_raw',
                         return_value=good_token):
-            with mock.patch('flask_jwt_consumer.flask_jwt_consumer._brute_force_key',
+            with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
                             return_value=JWT_PUBLIC_KEY):
                 protected = requires_jwt(identity)
                 protected('Yolo')
@@ -260,7 +260,7 @@ class TestExtensionJWTManager:
 
     def test_jwt_brute_force_key(self, live_testapp):
         """Should run through."""
-        with mock.patch('flask_jwt_consumer.flask_jwt_consumer._Config.decode_keys',
+        with mock.patch('flask_jwt_consumer.config._Config.decode_keys',
                         new_callable=PropertyMock) as fake_decode_keys:
             fake_decode_keys.return_value = AUTHORIZE_KEYS
             key = _brute_force_key(good_token)
@@ -268,7 +268,7 @@ class TestExtensionJWTManager:
 
     def test_jwt_brute_force_key_bad_keys(self, live_testapp):
         """Should return no keys."""
-        with mock.patch('flask_jwt_consumer.flask_jwt_consumer._Config.decode_keys',
+        with mock.patch('flask_jwt_consumer.config._Config.decode_keys',
                         new_callable=PropertyMock) as fake_decode_keys:
             fake_decode_keys.return_value = AUTHORIZE_BAD_KEYS
             key = _brute_force_key(good_token)

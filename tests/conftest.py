@@ -2,16 +2,18 @@
 
 import pytest
 from flask import Flask
-from flask_jwt_consumer import JWTManager
+from flask_jwt_consumer import JWTConsumer
 from webtest import TestApp
 
-jwtmanager = JWTManager()
+jwtconsumer = JWTConsumer()
+
 
 def create_app():
     app = Flask(__name__)
-    jwtmanager.init_app(app)
+    jwtconsumer.init_app(app)
 
     return app
+
 
 @pytest.fixture
 def live_app():
