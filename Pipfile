@@ -4,7 +4,6 @@ verify_ssl = true
 name = "flask-jwt-consumer"
 
 [dev-packages]
-WebTest = "*"
 flake8 = "*"
 flake8-blind-except = "*"
 flake8-debugger = "*"
@@ -13,10 +12,13 @@ flake8-isort = "*"
 flake8-quotes = "*"
 isort = "*"
 pep8-naming = "*"
-pytest = "*"
-flask = "*"
-pyjwt = "*"
 pylint = "*"
+pytest = "*"
+WebTest = "*"
+
+[packages]
+pyjwt = "*"
+flask = "*"
 cryptography = "*"
 
 [requires]
