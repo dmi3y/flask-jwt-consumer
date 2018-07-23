@@ -1,6 +1,4 @@
-[![CircleCI](https://circleci.com/gh/dmi3y/flask-jwt-consumer.svg?style=svg)](https://circleci.com/gh/dmi3y/flask-jwt-consumer)
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/2012c48af0e1d47d7f3a/maintainability)](https://codeclimate.com/github/dmi3y/flask-jwt-consumer/maintainability)
+[![CircleCI](https://circleci.com/gh/dmi3y/flask-jwt-consumer.svg?style=svg)](https://circleci.com/gh/dmi3y/flask-jwt-consumer) [![Maintainability](https://api.codeclimate.com/v1/badges/2012c48af0e1d47d7f3a/maintainability)](https://codeclimate.com/github/dmi3y/flask-jwt-consumer/maintainability)
 
 ## Flask JWT consumer
 
