@@ -143,7 +143,7 @@ class TestExtensionJWTConsumer:
         with mock.patch('flask.request.headers.get',
                         return_value='Bearer Blah'):
             token = get_jwt_raw()
-            assert token == bytes('Blah', 'utf-8')
+            assert token == 'Blah'
 
     def test_jwt_get_jwt_raw_empty(self, live_testapp):
         """Should run get_jwt_raw and get raw token."""

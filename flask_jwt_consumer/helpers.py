@@ -59,7 +59,7 @@ def get_jwt_raw():
                         401)
 
     token = parts[1]
-    return bytes(token, 'utf-8')
+    return token
 
 
 def get_jwt_payload():
