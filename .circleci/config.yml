@@ -17,7 +17,7 @@ jobs:
           key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
       - run:
           name: 'Run tests'
-          command: pipenv run test
+          command: pipenv run pytest tests --verbose
 
 workflows:
   version: 2
