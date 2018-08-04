@@ -21,7 +21,6 @@ def live_app():
     _live_app = create_app()
     ctx = _live_app.test_request_context()
     ctx.push()
-    _live_app.config['JWT_IDENTITY'] = 'self-identity'
     yield _live_app
 
     ctx.pop()
@@ -30,7 +29,15 @@ def live_app():
 @pytest.fixture
 def live_testapp(live_app):
     """A Webtest app."""
+    live_app.config['JWT_IDENTITY'] = 'self-identity'
     return TestApp(live_app)
+
+
+@pytest.fixture
+def live_testapp_no_identity(live_app):
+    """A Webtest app."""
+    return TestApp(live_app)
+
 
 @pytest.fixture
 def dummy_app():

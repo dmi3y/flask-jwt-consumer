@@ -3,6 +3,9 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "flask-jwt-consumer"
 
+[scripts]
+test = "pytest tests --verbose"
+
 [dev-packages]
 flake8 = "*"
 flake8-blind-except = "*"

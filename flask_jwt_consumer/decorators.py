@@ -16,11 +16,17 @@ def requires_jwt(f):
         key = _brute_force_key(token)
         if key:
             try:
+                jwt_config = {
+                    'algorithms': config.algorithm
+                }
+                if config.audience:
+                    jwt_config.update({
+                        'audience': config.audience
+                    })
                 payload = jwt.decode(
                     token,
                     key,
-                    algorithms=config.algorithm,
-                    audience=config.audience
+                    **jwt_config
                 )
             except jwt.ExpiredSignatureError:
                 raise AuthError({'code': 'token_expired',
