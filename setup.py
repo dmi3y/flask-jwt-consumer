@@ -1,11 +1,33 @@
 import setuptools
 
+import os
+import sys
+
+from setuptools.command.install import install
+
+
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+VERSION = "1.0.0"
+
+class VerifyVersionCommand(install):
+    """Custom command to verify that the git tag matches our version"""
+    description = 'verify that the git tag matches our version'
+
+    def run(self):
+        tag = os.getenv('CIRCLE_TAG')
+
+        if tag != VERSION:
+            info = "Git tag: {0} does not match the version of this app: {1}".format(
+                tag, VERSION
+            )
+            sys.exit(info)
+
+
 setuptools.setup(
     name="flask_jwt_consumer",
-    version="1.0.0",
+    version=VERSION,
     author="Dmitrii Lapshukov",
     author_email="lapshukov@gmail.com",
     description="Flask JWT consumer with multi public key support",
@@ -20,4 +42,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ),
+    cmdclass={
+        'verify': VerifyVersionCommand,
+    },
 )

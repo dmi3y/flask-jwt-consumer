@@ -1,26 +1,80 @@
+defaults: &defaults
+  docker:
+    - image: circleci/python:3.6.4
+  working_directory: ~/flask-jwt-consumer
+
 version: 2
 jobs:
   test:
-    docker:
-      - image: circleci/python:3.6.4
-    working_directory: ~/flask-jwt-consumer
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
           key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
       - run:
-          name: 'Install test dependencies'
+          name: Install test dependencies
           command: pipenv install --dev
       - save_cache:
           paths:
             - ./venv
           key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
       - run:
-          name: 'Run tests'
+          name: Run tests
           command: pipenv run pytest tests --verbose
+
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
+      - run:
+          name: Verify git tag vs. version
+          command: |
+            pipenv run python setup.py verify
+      - run:
+          name: Create packages
+          command: |
+            pipenv run python setup.py sdist
+            pipenv run python setup.py bdist_wheel
+      - persist_to_workspace:
+          root: ~/patient-finder-ui
+          paths:
+            - ./
+
+    deploy:
+      <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/patient-finder-ui
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
+      - run:
+          name: Init .pypirc
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = $PYPI_USERNAME" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+      - run:
+          name: Upload to pypi
+          command: pipenv run twine upload dist/*
 
 workflows:
   version: 2
-  main:
+  verify_build_and_deploy:
     jobs:
       - test
+      - build:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
