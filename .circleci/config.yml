@@ -10,14 +10,14 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           name: Install test dependencies
           command: pipenv install --dev
       - save_cache:
           paths:
             - ./venv
-          key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           name: Run tests
           command: pipenv run pytest tests --verbose
@@ -27,7 +27,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           name: Verify git tag vs. version
           command: |
@@ -48,7 +48,7 @@ jobs:
       - attach_workspace:
           at: ~/patient-finder-ui
       - restore_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "Pipfile" }}
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           name: Init .pypirc
           command: |
