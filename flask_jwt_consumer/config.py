@@ -34,6 +34,10 @@ class _Config(object):
         return current_app.config['JWT_IDENTITY']
 
     @property
+    def verify_aud(self):
+        return current_app.config['VERIFY_AUD']
+
+    @property
     def _public_keys(self):
         keys = current_app.config['JWT_AUTHORIZED_KEYS']
         if not keys:
