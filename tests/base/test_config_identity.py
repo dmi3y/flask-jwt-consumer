@@ -1,7 +1,7 @@
 """Testing flask jwt manager."""
 from datetime import datetime, timedelta
 from unittest import mock
-from unittest.mock import PropertyMock
+from unittest.mock import patch, PropertyMock
 
 import jwt
 import pytest
@@ -138,7 +138,7 @@ class TestExtensionJWTConsumer:
                         return_value=good_token):
             with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
                            return_value=JWT_PUBLIC_KEY):
-                with mock.patch('flask_jwt_consumer.config.verify_aud', return_value=False):
+                with mock.patch('flask_jwt_consumer.config._Config.verify_aud', return_value=False):
                     protected = requires_jwt(identity)
                     assert protected('De nada') == 'De nada'
 
