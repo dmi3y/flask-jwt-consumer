@@ -140,7 +140,11 @@ class TestExtensionJWTConsumer:
             with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
                             return_value=JWT_PUBLIC_KEY):
                 protected = requires_jwt(identity)
-                assert protected('De nada') == 'De nada'
+                with pytest.raises(AuthError) as err:
+                    protected('De nada')
+                assert err.value.code == 401
+                assert err.value.content == {'code': 'invalid_claims',
+                                        'description': 'Incorrect claims, please check the issued at, audience or issuer.'} != {'description': 'Missing claims, please check the audience.'}
 
     def test_jwt_requies_jwt_no_aud_token_no_identity(self, live_testapp_no_identity):
         """No identity and no aud just works"""
