@@ -135,7 +135,7 @@ class TestExtensionJWTConsumer:
 
     def test_jwt_disable_aud_verification(self, live_testapp):
         with mock.patch('flask_jwt_consumer.decorators.get_jwt_raw',
-                        return_value=good_token)
+                        return_value=good_token):
             with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
                            return_value=JWT_PUBLIC_KEY):
                 with mock.patch('flask_jwt_consumer.settings.Config.VERIFY_AUD', False):
