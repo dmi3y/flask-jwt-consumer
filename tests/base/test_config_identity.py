@@ -132,8 +132,17 @@ class TestExtensionJWTConsumer:
                 assert err.value.code == 401
                 assert err.value.content == {'code': 'invalid_claims',
                                             'description': 'Missing claims, please check the audience.'}
-    
-    def test_jwt_requies_jwt_no_identity(self, live_testapp_no_identity):
+
+    def test_jwt_disable_aud_verification(self, live_testapp):
+        with mock.patch('flask_jwt_consumer.decorators.get_jwt_raw',
+                        return_value=good_token)
+            with mock.patch('flask_jwt_consumer.decorators._brute_force_key',
+                           return_value=JWT_PUBLIC_KEY):
+                with mock.patch('flask_jwt_consumer.settings.Config.VERIFY_AUD', False):
+                    protected = requires_jwt(identity)
+                    assert protected('De nada') == 'De nada'
+
+    def test_jwt_requires_jwt_no_identity(self, live_testapp_no_identity):
         """No identity set up on extension, JWT has aud"""
         with mock.patch('flask_jwt_consumer.decorators.get_jwt_raw',
                         return_value=good_token):

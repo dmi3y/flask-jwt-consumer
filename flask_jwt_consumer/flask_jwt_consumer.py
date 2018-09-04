@@ -53,6 +53,9 @@ class JWTConsumer(object):
         # Expected value of the audience claim
         app.config.setdefault('JWT_IDENTITY', None)
 
+        # Whether or not to disable audience verification
+        app.config.setdefault('VERIFY_AUD', True)
+
         # Key to verify JWTs with when use when using an asymmetric
         # (public/private key) algorithms, such as RS* or EC*
         app.config.setdefault('JWT_AUTHORIZED_KEYS', None)
