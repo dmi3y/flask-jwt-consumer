@@ -24,7 +24,7 @@ def requires_jwt(f):
                         'audience': config.audience
                     })
                 else:
-                    jwt_config.update({options: {'verify_aud': False}})
+                    jwt_config.update({'options': {'verify_aud': False}})
                 payload = jwt.decode(
                     token,
                     key,
