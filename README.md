@@ -16,3 +16,4 @@ Inspired by [Flask JWT Simple](https://github.com/vimalloc/flask-jwt-simple), ni
 - `JWT_HEADER_TYPE` default `Bearer`, type of the token, part of the header's value.
 - `JWT_IDENTITY` optional, if provided JWT will use it.
 - `JWT_AUTHORIZED_KEYS` new line separated list of OpenSSH formatted keys.
+- `VERIFY_AUD` disable verification of `aud` during JWT decoding.
