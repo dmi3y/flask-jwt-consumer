@@ -49,7 +49,7 @@ def requires_jwt(f):
 
             _request_ctx_stack.top.jwt_payload = payload
             return f(*args, **kwargs)
-        raise AuthError({'code': 'Invalid_header.',
+        raise AuthError({'code': 'invalid_keys.',
                         'description': 'Unable to find appropriate key.'},
                         401)
     return decorated
