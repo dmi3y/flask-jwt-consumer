@@ -17,3 +17,17 @@ Inspired by [Flask JWT Simple](https://github.com/vimalloc/flask-jwt-simple), ni
 - `JWT_IDENTITY` optional, if provided JWT will use it.
 - `JWT_AUTHORIZED_KEYS` new line separated list of OpenSSH formatted keys.
 - `VERIFY_AUD` disable verification of `aud` during JWT decoding.
+
+### Decorators
+
+*@requires_jwt* - use on the flask endpoint that is desired to be protected, accepts additional parameter `pass_token_payload` which will add named parameter `token_payload` at the very end of the parameters accepted by decorated function.
+
+```py
+@requires_jwt
+def get(search):
+    # ...GET logic with search parameter
+
+@requires_jwt(pass_token_payload=True)
+def post(data, token_payload):
+    # ...POST logic with data parameter and token payload
+```

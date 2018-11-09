@@ -8,7 +8,7 @@ from .helpers import get_jwt_raw, _brute_force_key
 from .config import config
 
 
-def requires_jwt(f):
+def requires_jwt(f, **kwparams):
     """Determines if the Access Token is valid."""
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -48,8 +48,11 @@ def requires_jwt(f):
                                 401)
 
             _request_ctx_stack.top.jwt_payload = payload
-            return f(*args, **kwargs)
-        raise AuthError({'code': 'invalid_keys.',
+            more = {}
+            if kwparams.get('pass_token_payload', False):
+                more.update({'token_payload': payload})
+            return f(*args, **kwargs, **more)
+        raise AuthError({'code': 'Invalid_header.',
                         'description': 'Unable to find appropriate key.'},
                         401)
     return decorated
