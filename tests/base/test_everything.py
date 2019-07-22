@@ -132,6 +132,7 @@ class TestExtensionJWTConsumer:
     def test_jwt_manager_should_set_defaults(self, dummy_app):
         """Test JWTConsumer defaults."""
         JWTConsumer(dummy_app)
+        assert dummy_app.config['JWT_USE_COOKIE'] == False
         assert dummy_app.config['JWT_HEADER_NAME'] == 'Authorization'
         assert dummy_app.config['JWT_HEADER_TYPE'] == 'Bearer'
         assert dummy_app.config['JWT_ALGORITHM'] == 'RS256'
