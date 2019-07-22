@@ -43,6 +43,7 @@ class JWTConsumer(object):
     def _set_default_configuration_options(app):
         """Sets the default configuration options used by this extension."""
         # Options for JWTs when the TOKEN_LOCATION is headers
+        app.config.setdefault('JWT_USE_COOKIE', False)
         app.config.setdefault('JWT_HEADER_NAME', 'Authorization')
         app.config.setdefault('JWT_HEADER_TYPE', 'Bearer')
 

@@ -17,9 +17,24 @@ class _Config(object):
     @property
     def header_name(self):
         name = current_app.config['JWT_HEADER_NAME']
-        if not name:
+        use_cookie = current_app.config['JWT_USE_COOKIE']
+        if not name and not use_cookie:
             raise RuntimeError('JWT_HEADER_NAME cannot be empty')
         return name
+
+    @property
+    def use_cookie(self):
+        return current_app.config['JWT_USE_COOKIE']
+    
+    @property
+    def cookie_name(self):
+        use_cookie = current_app.config['JWT_USE_COOKIE']
+        cookie_name = current_app.config['JWT_COOKIE_NAME']
+        if use_cookie and not cookie_name:
+            raise RuntimeError(
+                'JWT_COOKIE_NAME cannot be empty whtn JWT_USE_COOKIE is enabled'
+            )
+        return cookie_name
 
     @property
     def header_type(self):

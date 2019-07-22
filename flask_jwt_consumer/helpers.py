@@ -34,8 +34,23 @@ def _brute_force_key(token):
     return valid_key
 
 
-# Format error response and append status code
 def get_jwt_raw():
+    if config.use_cookie == True:
+        return get_jwt_from_cookie()
+    else:
+        return get_jwt_from_header()
+
+def get_jwt_from_cookie():
+    auth = request.cookies.get(config.cookie_name, None)
+    if not auth:
+        raise AuthError({'code': 'authorization_cookie_missing',
+                        'description': 'Authorization cookie is expected.'},
+                        401)
+    
+    return auth
+
+# Format error response and append status code
+def get_jwt_from_header():
     """Obtains the Access Token from the Authorization Header."""
     auth = request.headers.get(config.header_name, None)
     if not auth:
