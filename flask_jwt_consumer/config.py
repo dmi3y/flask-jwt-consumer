@@ -32,7 +32,7 @@ class _Config(object):
         cookie_name = current_app.config['JWT_COOKIE_NAME']
         if use_cookie and not cookie_name:
             raise RuntimeError(
-                'JWT_COOKIE_NAME cannot be empty whtn JWT_USE_COOKIE is enabled'
+                'JWT_COOKIE_NAME cannot be empty when JWT_USE_COOKIE is enabled'
             )
         return cookie_name
 
