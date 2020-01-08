@@ -23,6 +23,7 @@ WebTest = "*"
 pyjwt = "*"
 flask = "*"
 cryptography = "*"
+dev = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
