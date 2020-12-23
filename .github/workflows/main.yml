@@ -1,0 +1,40 @@
+name: 'Test'
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    name: Python ${{ matrix.python }} Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python:
+        - 3.8
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+
+    - name: Cache Pypi
+      uses: actions/cache@v2
+      with:
+        path: ~/.local/share/virtualenvs
+        key: ${{ runner.os }}-pipenv-${{ hashFiles('Pipfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pipenv-
+
+    - name: Install Pipenv
+      run: pip install --upgrade pipenv
+
+    - name: Pipenv Install
+      run: pipenv install --deploy --dev
+
+    - name: Run Tests
+      run: pipenv run test
