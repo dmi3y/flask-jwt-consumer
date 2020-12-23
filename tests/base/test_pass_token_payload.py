@@ -101,8 +101,9 @@ def token_identity(it, token_payload=None):
     """ Echo back what it gets. """
     return (it, token_payload)
 
+
 raw_payload = {
-    'exp': datetime.utcnow() + timedelta(10),
+    'exp': int(datetime.timestamp(datetime.utcnow() + timedelta(10))),
     'outreach': '¡adelante!'
 }
 test_token = jwt.encode(raw_payload,

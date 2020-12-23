@@ -103,7 +103,7 @@ def identity(it):
 
 
 good_token_payload = {
-    'exp': datetime.utcnow() + timedelta(10),
+    'exp': int(datetime.timestamp(datetime.utcnow() + timedelta(10))),
     'aud': AUDIENCE
 }
 

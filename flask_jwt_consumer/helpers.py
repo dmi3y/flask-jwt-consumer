@@ -12,6 +12,7 @@ def _brute_force_key(token):
             jwt.decode(
                 token,
                 key,
+                algorithms=[config.algorithm],
                 options={
                     'verify_signature': True,
                     'verify_exp': False,
@@ -81,6 +82,6 @@ def get_jwt_payload():
     """
     Returns the python dictionary which has all of the data in this JWT.
 
-    If noJWT is currently present, and empty dict is returned
+    If no JWT is currently present, and empty dict is returned
     """
     return getattr(_request_ctx_stack.top, 'jwt_payload', {})
