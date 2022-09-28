@@ -34,48 +34,42 @@ def _brute_force_key(token):
 
     return valid_key
 
-
+#
+# NOTE(ian) 09/28/2022:
+# We want to support both cookie-auth and header-auth, that can be used flexibily in an app.
+# We preferentially look for cookie auth first, and if none can be found then we check the
+# header. If the auth is invalid for some reason, or if no auth is found, we raise an error.
+#
 def get_jwt_raw():
-    if config.use_cookie == True:
-        return get_jwt_from_cookie()
-    else:
-        return get_jwt_from_header()
+    auth_cookie = request.cookies.get(config.cookie_name, None)
+    auth_header = request.headers.get(config.header_name, None)
 
-def get_jwt_from_cookie():
-    auth = request.cookies.get(config.cookie_name, None)
-    if not auth:
-        raise AuthError({'code': 'authorization_cookie_missing',
-                        'description': 'Authorization cookie is expected.'},
-                        401)
-    
-    return auth
+    if auth_cookie:
+        if len(auth_cookie.split()) != 1:
+            raise AuthError({'code': 'invalid_cookie',
+                            'description': f"Bad cookie {config.cookie_name} . Expected value '<JWT>'"},
+                            401)
+        return auth_cookie
 
-# Format error response and append status code
-def get_jwt_from_header():
-    """Obtains the Access Token from the Authorization Header."""
-    auth = request.headers.get(config.header_name, None)
-    if not auth:
-        raise AuthError({'code': 'authorization_header_missing',
-                        'description': 'Authorization header is expected.'},
-                        401)
+    if auth_header:
+        parts = auth.split()
+        if parts[0] != config.header_type:
+            raise AuthError({'code': 'invalid_header',
+                            'description': 'Authorization header must start with {}.'.format(config.header_type)},
+                            401)
+        elif len(parts) == 1:
+            raise AuthError({'code': 'invalid_header',
+                            'description': 'Token not found.'},
+                            401)
+        elif len(parts) > 2:
+            raise AuthError({'code': 'invalid_header',
+                            'description': 'Authorization header must be {} token.'.format(config.header_type)},
+                            401)
+        return parts[1]
 
-    parts = auth.split()
-
-    if parts[0] != config.header_type:
-        raise AuthError({'code': 'invalid_header',
-                        'description': 'Authorization header must start with {}.'.format(config.header_type)},
+    raise AuthError({'code': 'no_authorization_error',
+                     'description': 'Authorization is required on either the cookie or the header.'},
                         401)
-    elif len(parts) == 1:
-        raise AuthError({'code': 'invalid_header',
-                        'description': 'Token not found.'},
-                        401)
-    elif len(parts) > 2:
-        raise AuthError({'code': 'invalid_header',
-                        'description': 'Authorization header must be {} token.'.format(config.header_type)},
-                        401)
-
-    token = parts[1]
-    return token
 
 
 def get_jwt_payload():
