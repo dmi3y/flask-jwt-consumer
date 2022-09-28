@@ -12,7 +12,7 @@ def requires_jwt(f, **kwparams):
     """Determines if the Access Token is valid."""
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = get_jwt_raw()
+        token = get_jwt_raw(kwparams.get("use_cookie"))
         key = _brute_force_key(token)
         if key:
             try:

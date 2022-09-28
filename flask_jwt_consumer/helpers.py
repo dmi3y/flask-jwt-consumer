@@ -34,9 +34,8 @@ def _brute_force_key(token):
 
     return valid_key
 
-
-def get_jwt_raw():
-    if config.use_cookie == True:
+def get_jwt_raw(use_cookie=None):
+    if use_cookie or config.use_cookie == True:
         return get_jwt_from_cookie()
     else:
         return get_jwt_from_header()
