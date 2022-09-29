@@ -11,7 +11,7 @@ workflows:
             tags:
               only: /.*/
       - common/release:
-          context: PACKAGECLOUD
+          context: aws-ecr-prod
           requires:
             - common/pybuild
           filters:
