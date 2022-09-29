@@ -155,8 +155,8 @@ class TestExtensionJWTConsumer:
 
             value = error.value
             assert value.code == 401
-            assert value.content == {'code': 'authorization_header_missing',
-                                     'description': 'Authorization header is expected.'}
+            assert value.content == {'code': 'no_authorization_error',
+                     'description': 'Authorization is required on either the cookie or the header.'}
 
     def test_jwt_get_jwt_raw_no_bearer(self, live_testapp):
         """Should run get_jwt_raw and throw an error."""
