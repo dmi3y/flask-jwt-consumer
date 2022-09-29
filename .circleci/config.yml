@@ -6,6 +6,7 @@ orbs:
 defaults: &defaults
   docker:
     - image: cimg/python:3.10.7
+  working_directory: ~/syapse-flask-jwt-consumer
 
 jobs:
   test:
@@ -24,6 +25,10 @@ jobs:
       - run:
           name: Run tests
           command: pipenv run pytest tests --verbose
+      - persist_to_workspace:
+          root: ~/syapse-flask-jwt-consumer
+          paths:
+            - ./
 
 workflows:
   main:
