@@ -29,7 +29,7 @@ class _Config(object):
     @property
     def cookie_name(self):
         use_cookie = current_app.config['JWT_USE_COOKIE']
-        cookie_name = current_app.config['JWT_COOKIE_NAME']
+        cookie_name = current_app.config.get('JWT_COOKIE_NAME')
         if use_cookie and not cookie_name:
             raise RuntimeError(
                 'JWT_COOKIE_NAME cannot be empty when JWT_USE_COOKIE is enabled'
