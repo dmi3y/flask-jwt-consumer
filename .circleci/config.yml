@@ -1,91 +1,28 @@
-version: 2
+version: 2.1
 
-defaults: &defaults
-  docker:
-    - image: circleci/python:3.6.6
-  working_directory: ~/flask-jwt-consumer
-
-jobs:
-  test:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache:
-          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - run:
-          name: Install test dependencies
-          command: pipenv install --dev
-      - save_cache:
-          paths:
-            - ./venv
-          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - run:
-          name: Run tests
-          command: pipenv run pytest tests --verbose
-      - persist_to_workspace:
-          root: ~/flask-jwt-consumer
-          paths:
-            - ./
-
-  build:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/flask-jwt-consumer
-      - run:
-          name: Verify git tag vs. version
-          command: |
-            python setup.py verify
-      - run:
-          name: Create packages
-          command: |
-            python setup.py sdist
-            python setup.py bdist_wheel
-      - persist_to_workspace:
-          root: ~/flask-jwt-consumer
-          paths:
-            - ./dist
-
-  deploy:
-    <<: *defaults
-    steps:
-      - attach_workspace:
-          at: ~/flask-jwt-consumer
-      - run:
-          name: Init .pypirc
-          command: |
-            echo -e "[pypi]" >> ~/.pypirc
-            echo -e "username = $PYPI_USERNAME" >> ~/.pypirc
-            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
-
-      - run:
-          name: Install twine
-          command: pip install twine --user --no-warn-script-location
-      - run:
-          name: Upload to pypi
-          command: ~/.local/bin/twine upload dist/*
+orbs:
+  common: syapse/common@1.4.0
 
 workflows:
-  version: 2
-  verify_build_and_deploy:
+  main:
     jobs:
-      - test:
+      - common/pybuild:
           filters:
             tags:
               only: /.*/
-      - build:
+      - common/release:
+          context: PACKAGECLOUD
           requires:
-            - test
+            - common/pybuild
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-      - deploy:
+              only: /.*/
+      - common/release-notes:
+          context: aws-ecr-prod
           requires:
-            - build
+            - common/release
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+)*/
+              only: /.*/
             branches:
               ignore: /.*/

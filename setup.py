@@ -26,7 +26,7 @@ class VerifyVersionCommand(install):
 
 
 setuptools.setup(
-    name="flask_jwt_consumer",
+    name="syapse-flask-jwt-consumer",
     version=VERSION,
     author="Dmitrii Lapshukov",
     author_email="lapshukov@gmail.com",
