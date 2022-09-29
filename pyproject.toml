@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+
+[tool.coverage.xml]
+output = "coverage.xml"
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+files = ["syapse_jwt_checker", "tests"]
+error_summary = true
+ignore_missing_imports = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[tool.setuptools_scm]
