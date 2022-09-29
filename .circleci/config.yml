@@ -3,9 +3,32 @@ version: 2.1
 orbs:
   common: syapse/common@1.4.0
 
+defaults: &defaults
+  docker:
+    - image: cimg/python:3.10.7
+
+jobs:
+  test:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Install test dependencies
+          command: pipenv install --dev
+      - save_cache:
+          paths:
+            - ./venv
+          key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: Run tests
+          command: pipenv run pytest tests --verbose
+
 workflows:
   main:
     jobs:
+      - test
       - common/pybuild:
           filters:
             tags:
