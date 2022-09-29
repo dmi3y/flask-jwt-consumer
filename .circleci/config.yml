@@ -19,6 +19,8 @@ workflows:
           filters:
             tags:
               only: /.*/
+            branches:
+              ignore: /.*/
       - common/release-notes:
           context: aws-ecr-prod
           requires:
