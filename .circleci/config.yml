@@ -17,7 +17,7 @@ jobs:
           key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           name: Install test dependencies
-          command: pipenv install --dev
+          command: pipenv install --dev --skip-lock
       - save_cache:
           paths:
             - ./venv
