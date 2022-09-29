@@ -52,7 +52,7 @@ def get_jwt_raw():
         return auth_cookie
 
     if auth_header:
-        parts = auth.split()
+        parts = auth_header.split()
         if parts[0] != config.header_type:
             raise AuthError({'code': 'invalid_header',
                             'description': 'Authorization header must start with {}.'.format(config.header_type)},
